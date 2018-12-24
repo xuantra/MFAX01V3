@@ -2,101 +2,63 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using MFAX01V3.Core;
+using PropertyChanged;
 
 namespace MFAX01V3
 {
-    /// <summary>
-    /// A base view model that fires Property Changed events as needed
-    /// </summary>
     public class BaseViewModel : INotifyPropertyChanged
     {
-        /// <summary>
-        /// The event that is fired when any child property changes its value
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        /// Call this to fire a <see cref="PropertyChanged"/> event
-        /// </summary>
-        /// <param name="name"></param>
-        public void OnPropertyChanged(string name)
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+    class RelayCommand<T> : ICommand
+    {
+        private readonly Predicate<T> _canExecute;
+        private readonly Action<T> _execute;
+        private Func<object, bool> p;
+
+        public RelayCommand(Predicate<T> canExecute, Action<T> execute)
+        {
+            if (execute == null)
+                throw new ArgumentNullException("execute");
+            _canExecute = canExecute;
+            _execute = execute;
         }
 
-        #region Command Helpers
-
-        /// <summary>
-        /// Runs a command if the updating flag is not set.
-        /// If the flag is true (indicating the function is already running) then the action is not run.
-        /// If the flag is false (indicating no running function) then the action is run.
-        /// Once the action is finished if it was run, then the flag is reset to false
-        /// </summary>
-        /// <param name="updatingFlag">The boolean property flag defining if the command is already running</param>
-        /// <param name="action">The action to run if the command is not already running</param>
-        /// <returns></returns>
-        protected async Task RunCommandAsync(Expression<Func<bool>> updatingFlag, Func<Task> action)
+        public RelayCommand(Func<object, bool> p)
         {
-            // Lock to ensure single access to check
-            lock (updatingFlag)
-            {
-                // Check if the flag property is true (meaning the function is already running)
-                if (updatingFlag.GetPropertyValue())
-                    return;
+            this.p = p;
+        }
 
-                // Set the property flag to true to indicate we are running
-                updatingFlag.SetPropertyValue(true);
-            }
-
+        public bool CanExecute(object parameter)
+        {
             try
             {
-                // Run the passed in action
-                await action();
+                return _canExecute == null ? true : _canExecute((T)parameter);
             }
-            finally
+            catch
             {
-                // Set the property flag back to false now it's finished
-                updatingFlag.SetPropertyValue(false);
+                return true;
             }
         }
 
-        /// <summary>
-        /// Runs a command if the updating flag is not set.
-        /// If the flag is true (indicating the function is already running) then the action is not run.
-        /// If the flag is false (indicating no running function) then the action is run.
-        /// Once the action is finished if it was run, then the flag is reset to false
-        /// </summary>
-        /// <param name="updatingFlag">The boolean property flag defining if the command is already running</param>
-        /// <param name="action">The action to run if the command is not already running</param>
-        /// <typeparam name="T">The type the action returns</typeparam>
-        /// <returns></returns>
-        protected async Task<T> RunCommandAsync<T>(Expression<Func<bool>> updatingFlag, Func<Task<T>> action, T defaultValue = default(T))
+        public void Execute(object parameter)
         {
-            // Lock to ensure single access to check
-            lock (updatingFlag)
-            {
-                // Check if the flag property is true (meaning the function is already running)
-                if (updatingFlag.GetPropertyValue())
-                    return defaultValue;
-
-                // Set the property flag to true to indicate we are running
-                updatingFlag.SetPropertyValue(true);
-            }
-
-            try
-            {
-                // Run the passed in action
-                return await action();
-            }
-            finally
-            {
-                // Set the property flag back to false now it's finished
-                updatingFlag.SetPropertyValue(false);
-            }
+            _execute((T)parameter);
         }
 
-        #endregion
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
     }
 }

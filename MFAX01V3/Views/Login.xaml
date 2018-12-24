@@ -4,9 +4,56 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MFAX01V3.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="15"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Login" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        x:Name="window"
+        DataContext="{StaticResource loginVM}"
+        Title="" Height="558.393" Width="492.244">
+    <Border>
+        <Grid>
+            <ScrollViewer>
+                <StackPanel 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    TextBlock.TextAlignment="Center">
+
+                    <Border CornerRadius="10"
+                            Padding="15 50 15 15"
+                            Width="330"
+                            Margin="50 50 50 0">
+                        <StackPanel>
+                            <materialDesign:Card>
+                                <TextBox   materialDesign:HintAssist.Hint="Tên Đăng Nhập..." 
+                                          IsHitTestVisible="True"
+                                          Text="{Binding User}"
+                                          Tag="User"/>
+                            </materialDesign:Card>
+                            <materialDesign:Card Margin="0 10 0 0">
+                                <PasswordBox  materialDesign:HintAssist.Hint="Mật Khẩu..."
+                                              
+                                         Tag="PassWord"
+                                          />
+                            </materialDesign:Card>
+                            <Button Content="Đăng Nhập"  Margin="0 10 0 0"
+                                    IsDefault="True"
+                                    Command="{Binding LoginComand}"    
+                                    CommandParameter="{Binding ElementName=window}"
+                                    HorizontalAlignment="Center" >
+                                
+                            </Button>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+    </Border>
 </Window>

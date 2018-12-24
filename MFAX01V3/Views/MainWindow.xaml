@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MFAX01V3"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MFAX01V3" Height="450" Width="800" WindowStyle="None">
     <Grid>
-        
+        <Grid Height="60" VerticalAlignment="Top" Background="#FF2B64DC">
+            <TextBlock Text="Phần Mềm MFAX" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+        </Grid>
+        <Grid Width="120" HorizontalAlignment="Left" Background="#FF052872"></Grid>
     </Grid>
 </Window>

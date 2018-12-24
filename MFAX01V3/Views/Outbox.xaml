@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="MFAX01V3.Views.Outbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MFAX01V3"
+             mc:Ignorable="d" 
+             DataContext="{StaticResource OutboxVM}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:EnumToStatus x:Key="enumtoStatus"></local:EnumToStatus>
+        <local:EnumtoExStatus x:Key="enumtoExStatus"></local:EnumtoExStatus>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition  />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="20,0,0,0"
+                       Text="Từ"
+                       VerticalAlignment="Center"></TextBlock>
+            <DatePicker x:Name="dtp_Tu"
+                        VerticalAlignment="Center"
+                        Margin="20,0,0,0"></DatePicker>
+            <TextBlock Margin="20,0,0,0"
+                       Text="Đến"
+                       VerticalAlignment="Center"></TextBlock>
+            <DatePicker x:Name="dtp_Den"
+                        VerticalAlignment="Center"
+                       
+                        Margin="20,0,0,0"></DatePicker>
+            <Button Name="btnFilter"
+                    Margin="20,0,0,0"
+                    Content="Lọc"
+                    ></Button>
+            <Button Name="btnReset"
+                    Margin="20,0,0,0"
+                    Content="Bỏ Lọc"
+                   ></Button>
+        </StackPanel>
+        <ListView Name="dtg"  Grid.Row="1"
+                  
+                  Grid.RowSpan="2">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="menuCopy"
+                              Header="Sao Chép"
+                              Command="{Binding CmCopy}"
+                              >
+                    </MenuItem>
+                    <MenuItem x:Name="menuXem"
+                              Header="Xem"
+                              Command="{Binding CmMnXem}">
+                    </MenuItem>
+                    <MenuItem x:Name="menuGL"
+                              Header="Gửi Lại"
+                              >
+                    </MenuItem>
+                    <MenuItem x:Name="menuXoa"
+                              Header="Xóa"
+                              Command="{Binding CmXoa}">
+                    </MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="0"
+                                    Header="ID"
+                                    DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                    <GridViewColumn Header="Tên Nhận"
+                                    DisplayMemberBinding="{Binding Recipient.Name}"></GridViewColumn>
+                    <GridViewColumn Header="SĐT Nhận"
+                                    DisplayMemberBinding="{Binding Recipient.FaxNumber}"></GridViewColumn>
+                    <GridViewColumn Header="Thời Gian"
+                                    DisplayMemberBinding="{Binding OriginalScheduledTime}"></GridViewColumn>
+                    <GridViewColumn Header="Tiêu Đề"
+                                    DisplayMemberBinding="{Binding Subject}"></GridViewColumn>
+                    <GridViewColumn Header="CSID"
+                                    DisplayMemberBinding="{Binding CSID}"></GridViewColumn>
+                    <GridViewColumn Header="Trạng Thái"
+                                    DisplayMemberBinding="{Binding Status, Converter={StaticResource enumtoStatus}}"></GridViewColumn>
+                    <GridViewColumn 
+                                    Header="Trạng thái mở rộng"
+                                    DisplayMemberBinding="{Binding ExtendedStatusCode, Converter={StaticResource enumtoExStatus }}"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="MFAX01V3.Views.Sentbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MFAX01V3.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Margin="20,0,0,0"
+                       Text="Từ"
+                       VerticalAlignment="Center"></TextBlock>
+            <DatePicker x:Name="dtp_Tu"
+                        VerticalAlignment="Center"
+                        Margin="20,0,0,0"></DatePicker>
+            <TextBlock Margin="20,0,0,0"
+                       Text="Đến"
+                       VerticalAlignment="Center"></TextBlock>
+            <DatePicker x:Name="dtp_Den"
+                        VerticalAlignment="Center"
+                        Margin="20,0,0,0"></DatePicker>
+            <Button Name="btnFilter"
+                    Margin="20,0,0,0"
+                    Content="Lọc"
+                    Click="btnFilter_Click"></Button>
+            <Button Name="btnReset"
+                    Margin="20,0,0,0"
+                    Content="Bỏ Lọc"
+                    Click="btnReset_Click"></Button>
+        </StackPanel>
+
+        <ListView Name="dtg" Grid.Row="1"
+                  PreviewMouseDoubleClick="dtg_PreviewMouseDoubleClick"
+                  Grid.RowSpan="2">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="menuCopy"
+                              Header="Sao Chép"
+                              Command="{Binding CmCopy}"
+                             
+                              >
+                    </MenuItem>
+                    <MenuItem x:Name="menuXem"
+                              Header="Xem"
+                              Command="{Binding CmMnXem}">
+                    </MenuItem>
+                    <MenuItem x:Name="menuTL"
+                              Header="Trả Lời"
+                              Command="{Binding CmTraloi}"
+                              >
+                    </MenuItem>
+                    <MenuItem x:Name="menuXoa"
+                              Header="Xóa"
+                              Command="{Binding CmXoa}"
+                              >
+                    </MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="0"
+                                    Header="ID"
+                                    DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                    <GridViewColumn Header="Người Gửi" 
+                                    DisplayMemberBinding="{Binding TSID}"></GridViewColumn>
+                    <GridViewColumn Header="SĐT Gửi"
+                                    DisplayMemberBinding="{Binding Recipient.FaxNumber}"></GridViewColumn>
+                    <GridViewColumn Header="Người Nhận"
+                                    DisplayMemberBinding="{Binding Recipient.Name}"></GridViewColumn>
+                    <GridViewColumn Header="Tên Fax"
+                                    DisplayMemberBinding="{Binding DocumentName}"></GridViewColumn>
+                    <GridViewColumn Header="Thời gian"
+                                    DisplayMemberBinding="{Binding OriginalScheduledTime}"></GridViewColumn>
+                    <GridViewColumn Header="Tiêu Đề"
+                                    DisplayMemberBinding="{Binding Subject}"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

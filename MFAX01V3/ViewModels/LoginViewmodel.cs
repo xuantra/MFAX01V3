@@ -12,10 +12,8 @@ namespace MFAX01V3
 {
     public class LoginViewmodel : BaseViewModel
     {
-        private string _UserName;
-        public string User { get => _UserName; set { _UserName = value; OnPropertyChanged(); } }
-        public string PassWord { get => _PassWord; set{ _PassWord = value; OnPropertyChanged(); } }
-        private string _PassWord;
+        public string User { get; set; } = "admin";
+        public string PassWord { get; set; }
         public bool IsLogin { get; set; }
         public bool IsNotLoginRunning { get; set; }
 

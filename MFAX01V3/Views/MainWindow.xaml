@@ -3,13 +3,158 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:MFAX01V3"
         mc:Ignorable="d"
-        Title="MFAX01V3" Height="450" Width="800" WindowStyle="None">
-    <Grid>
-        <Grid Height="60" VerticalAlignment="Top" Background="#FF2B64DC">
-            <TextBlock Text="Phần Mềm MFAX" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
-        </Grid>
-        <Grid Width="120" HorizontalAlignment="Left" Background="#FF052872"></Grid>
-    </Grid>
+        xmlns:Views="clr-namespace:MFAX01V3.Views"
+        DataContext="{StaticResource MainWindowVM}"
+        xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+        Title="MFAX" Height="600" Width="800" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Shadows.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ToggleButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type local:InBoxViewModel}">
+                <Views:Inbox/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type local:OutboxViewmodel}">
+                <Views:Outbox/>
+            </DataTemplate>
+            <!-- data template used for the dialogs example, defines a View for a ViewModel of type DateTime  -->
+            <Storyboard x:Key="OpenMenu">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="70"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="200"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="CloseMenu">
+                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                    <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="70"/>
+                </DoubleAnimationUsingKeyFrames>
+            </Storyboard>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource CloseMenu}"/>
+        </EventTrigger>
+    </Window.Triggers>
+    <materialDesign:DialogHost>
+        <DockPanel>
+            <Grid DockPanel.Dock="Top" Background="#FF174E9C" Height="60">
+                <DockPanel>
+                    <materialDesign:PopupBox Foreground="WhiteSmoke" DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                        <StackPanel>
+                            <Button Content="Cài Đặt" Click="MenuPopupButton_OnClick"/>
+                            <Button Content="Hướng Dẫn Sử Dụng" Click="MenuPopupButton_OnClick"/>
+                            <Button Content="Thông Tin" />
+                            <Separator/>
+                            <Button Content="Thoát" Click="MenuPopupButton_OnClick"/>
+                        </StackPanel>
+                    </materialDesign:PopupBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="22" Foreground="#FFF7ED0F">MFAX</TextBlock>
+                        
+                        <Button Height="60" Margin="20 0 0 0" Background="{x:Null}" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="40" Width="40"  Source="/MFAX01V3;component/images/newFax.ico"/>
+                                <TextBlock Text="Fax Mới"  VerticalAlignment="Center"  />
+                            </StackPanel>
+                        </Button>
+                        <Button Height="60" Margin="20 0 0 0" Background="{x:Null}" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/contactBook.ico"/>
+                                <TextBlock Text="Danh Bạ"  VerticalAlignment="Center"  />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </DockPanel>
+            </Grid>
+            <DockPanel>
+                <StackPanel Width="70" DockPanel.Dock="Left" Background="#FF174E9C" x:Name="GridMenu">
+                    <Grid Height="50">
+                        <Button x:Name="ButtonOpenMenu" Click="ButtonOpenMenu_Click" Width="50" Height="50" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+                            <materialDesign:PackIcon Height="30" Width="20" Kind="Menu" Foreground="White"></materialDesign:PackIcon>
+                        </Button>
+                        <Button x:Name="ButtonCloseMenu" Click="ButtonCloseMenu_Click" Width="50" Height="50" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF31577E">
+                            <materialDesign:PackIcon Height="30" Width="20" Kind="ArrowLeft" Foreground="White"></materialDesign:PackIcon>
+                        </Button>
+                    </Grid>
+                    <ListView x:Name="ListViewMenu" SelectedItem="{Binding SelectedMenu,Mode=TwoWay}" Foreground="#FF5C99D6" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListViewItem x:Name="itemInbox" Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/mail-inbox.png"/>
+                                <TextBlock Text="Hộp Thư Đến" FontSize="16" VerticalAlignment="Center"  Margin="20 10"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem x:Name="itemSentbox" Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/mail-outbox.png"/>
+                                <TextBlock Text="Hộp Thư Lỗi" FontSize="16" VerticalAlignment="Center"  Margin="20 10"/>
+                            </StackPanel>
+                        </ListViewItem>
+                        <ListViewItem x:Name="itemOutbox" Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/Mail-Failed.png"/>
+                                <TextBlock Text="Hộp Thư Gửi" FontSize="16" VerticalAlignment="Center" Margin="20 10"/>
+                            </StackPanel>
+                        </ListViewItem>
+                      
+                        <ListViewItem Height="60">
+                            <StackPanel Orientation="Horizontal">
+                                <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/newScan.ico"/>
+                                <TextBlock Text="Scan" FontSize="16" VerticalAlignment="Center"  Margin="20 10"/>
+                            </StackPanel>
+                        </ListViewItem>
+                    </ListView>
+                </StackPanel>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="15*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ContentControl Content="{Binding SelectedViewmodel}"/>
+                    <StatusBar Height="30" Background="#FFC2D1E8" Grid.Row="1" VerticalAlignment="Bottom">
+                        <StatusBar.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="120" />
+                                    </Grid.ColumnDefinitions>
+                                </Grid>
+                            </ItemsPanelTemplate>
+                        </StatusBar.ItemsPanel>
+                        <StatusBarItem>
+                            <TextBlock Name="lblCursorPosition" />
+                        </StatusBarItem>
+                        <Separator Grid.Column="1" />
+                        <StatusBarItem Grid.Column="2">
+                            
+                        </StatusBarItem>
+                        <Separator Grid.Column="3" />
+                        <StatusBarItem Grid.Column="4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="TT Modem" VerticalAlignment="Center" ></TextBlock>
+                                <Image Margin="10 0 0 0" Source="{Binding ModemStatus, Converter={StaticResource ResourceKey=CvtBoolToImageSource}}"></Image>
+                            </StackPanel>
+                        </StatusBarItem>
+                    </StatusBar>
+                </Grid>
+
+            </DockPanel>
+        </DockPanel>
+    </materialDesign:DialogHost>
+
 </Window>

@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="MFAX01V3.Controls.UcTimKiemThu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MFAX01V3.Controls"
+             xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             mc:Ignorable="d" 
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal"
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}" d:DesignWidth="870.13" Height="54.935">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="148*"/>
+            <ColumnDefinition Width="179*"/>
+            <ColumnDefinition Width="543*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <DatePicker Margin="0 5 0 0" x:Name="dtpNgayBatDau"
+                Width="100"
+                materialDesign:HintAssist.Hint="Ngày Bắt Đầu"
+                
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" />
+        <DatePicker Margin="0 5 0 0" x:Name="dtpNgayKetThuc"
+                Width="100"
+                materialDesign:HintAssist.Hint="Ngày Kết Thúc"
+                
+                Style="{StaticResource MaterialDesignFloatingHintDatePicker}" Grid.Column="1" />
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
+            <Button Width="100" 
+                Height="30"
+                Content="Reset" 
+                    x:Name="btnReset"
+                    Click="btnReset_Click"
+                    
+                    Style="{StaticResource MaterialDesignRaisedDarkButton}" Grid.Column="2" Margin="0,0,20,0"
+                ></Button>
+            <Button Width="100"  x:Name="btnTimKiem"
+               Click="btnTimKiem_Click" 
+                Height="30"
+                Content="Tìm Kiếm" Style="{StaticResource MaterialDesignRaisedDarkButton}" Grid.Column="2" Margin="0,0,20,0"
+                ></Button>
+        </StackPanel >
+        
+    </Grid>
+</UserControl>

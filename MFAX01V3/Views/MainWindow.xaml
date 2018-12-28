@@ -23,6 +23,9 @@
             <DataTemplate DataType="{x:Type local:OutboxViewmodel}">
                 <Views:Outbox/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type local:SentBoxViewModel}">
+                <Views:Sentbox/>
+            </DataTemplate>
             <!-- data template used for the dialogs example, defines a View for a ViewModel of type DateTime  -->
             <Storyboard x:Key="OpenMenu">
                 <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
@@ -61,8 +64,8 @@
                     </materialDesign:PopupBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" FontSize="22" Foreground="#FFF7ED0F">MFAX</TextBlock>
-                        
-                        <Button Height="60" Margin="20 0 0 0" Background="{x:Null}" >
+
+                        <Button Height="60" Margin="20 0 0 0" Background="{x:Null}" Command="{Binding CmdFaxMoi}" >
                             <StackPanel Orientation="Horizontal">
                                 <Image  Height="40" Width="40"  Source="/MFAX01V3;component/images/newFax.ico"/>
                                 <TextBlock Text="Fax Mới"  VerticalAlignment="Center"  />
@@ -98,13 +101,13 @@
                         <ListViewItem x:Name="itemSentbox" Height="60">
                             <StackPanel Orientation="Horizontal">
                                 <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/mail-outbox.png"/>
-                                <TextBlock Text="Hộp Thư Lỗi" FontSize="16" VerticalAlignment="Center"  Margin="20 10"/>
+                                <TextBlock Text="Hộp Thư Gửi " FontSize="16" VerticalAlignment="Center"  Margin="20 10"/>
                             </StackPanel>
                         </ListViewItem>
                         <ListViewItem x:Name="itemOutbox" Height="60">
                             <StackPanel Orientation="Horizontal">
                                 <Image  Height="50" Width="50"  Source="/MFAX01V3;component/images/Mail-Failed.png"/>
-                                <TextBlock Text="Hộp Thư Gửi" FontSize="16" VerticalAlignment="Center" Margin="20 10"/>
+                                <TextBlock Text="Hộp Thư Lỗi" FontSize="16" VerticalAlignment="Center" Margin="20 10"/>
                             </StackPanel>
                         </ListViewItem>
                       
@@ -127,7 +130,7 @@
                             <ItemsPanelTemplate>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="150" />
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
@@ -137,7 +140,7 @@
                             </ItemsPanelTemplate>
                         </StatusBar.ItemsPanel>
                         <StatusBarItem>
-                            <TextBlock Name="lblCursorPosition" />
+                            <TextBlock Name="txbStatusJob" Text="{Binding StatusJob}" Foreground="Green" FontWeight="Bold" />
                         </StatusBarItem>
                         <Separator Grid.Column="1" />
                         <StatusBarItem Grid.Column="2">

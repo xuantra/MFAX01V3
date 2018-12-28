@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MFAX01V3"
              mc:Ignorable="d" 
+              xmlns:controls ="clr-namespace:MFAX01V3.Controls"
              DataContext="{StaticResource OutboxVM}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -13,32 +14,12 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition  />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Margin="20,0,0,0"
-                       Text="Từ"
-                       VerticalAlignment="Center"></TextBlock>
-            <DatePicker x:Name="dtp_Tu"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0"></DatePicker>
-            <TextBlock Margin="20,0,0,0"
-                       Text="Đến"
-                       VerticalAlignment="Center"></TextBlock>
-            <DatePicker x:Name="dtp_Den"
-                        VerticalAlignment="Center"
-                       
-                        Margin="20,0,0,0"></DatePicker>
-            <Button Name="btnFilter"
-                    Margin="20,0,0,0"
-                    Content="Lọc"
-                    ></Button>
-            <Button Name="btnReset"
-                    Margin="20,0,0,0"
-                    Content="Bỏ Lọc"
-                   ></Button>
-        </StackPanel>
+        <Grid>
+            <controls:UcTimKiemThu x:Name="UcTimKiem" BtnReset="UcTimKiem_BtnReset" BtnTimKiem="UcTimKiem_BtnTimKiem"/>
+        </Grid>
         <ListView Name="dtg"  Grid.Row="1"
                   
                   Grid.RowSpan="2">
@@ -73,7 +54,7 @@
                     <GridViewColumn Header="SĐT Nhận"
                                     DisplayMemberBinding="{Binding Recipient.FaxNumber}"></GridViewColumn>
                     <GridViewColumn Header="Thời Gian"
-                                    DisplayMemberBinding="{Binding OriginalScheduledTime}"></GridViewColumn>
+                                    DisplayMemberBinding="{Binding OriginalScheduledTime,StringFormat='{}{0:HH:mm-dd/MM/yyyy}'}"></GridViewColumn>
                     <GridViewColumn Header="Tiêu Đề"
                                     DisplayMemberBinding="{Binding Subject}"></GridViewColumn>
                     <GridViewColumn Header="CSID"

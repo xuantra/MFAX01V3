@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MFAX01V3.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,17 @@ namespace MFAX01V3.Views
         public Outbox()
         {
             InitializeComponent();
+        }
+
+        private void UcTimKiem_BtnReset(object sender, EventArgs e)
+        {
+            UcTimKiemThu uc = sender as UcTimKiemThu;
+            (this.DataContext as OutboxViewmodel).TimKiemThu.Execute(uc);
+        }
+
+        private void UcTimKiem_BtnTimKiem(object sender, EventArgs e)
+        {
+            (this.DataContext as OutboxViewmodel).CmdReset.Execute(null);
         }
     }
 }

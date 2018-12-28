@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:MFAX01V3"
              mc:Ignorable="d" 
              DataContext="{StaticResource InboxVM}"
+              xmlns:controls ="clr-namespace:MFAX01V3.Controls"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <local:ConvertReadToStyle x:Key="ReadToText"></local:ConvertReadToStyle>
@@ -13,31 +14,12 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition  Height="30"/>
+                <RowDefinition  Height="50"/>
                 <RowDefinition  />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="20,0,0,0"
-                       Text="Từ"
-                       VerticalAlignment="Center"></TextBlock>
-                <DatePicker x:Name="dtp_Tu"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0"></DatePicker>
-                <TextBlock Margin="20,0,0,0"
-                       Text="Đến"
-                       VerticalAlignment="Center"></TextBlock>
-                <DatePicker x:Name="dtp_Den"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0"></DatePicker>
-                <Button Name="btnFilter"
-                    Margin="20,0,0,0"
-                    Content="Lọc"
-                  ></Button>
-                <Button Name="btnReset"
-                    Margin="20,0,0,0"
-                    Content="Bỏ Lọc"
-                    ></Button>
-            </StackPanel>
+            <Grid >
+                <controls:UcTimKiemThu x:Name="UcTimkiem" BtnReset="UcTimkiem_BtnReset" BtnTimKiem="UcTimkiem_BtnTimKiem" />
+            </Grid>
             <ListView Name="dtg" Grid.Row="1"   ItemsSource="{Binding DanhSachFaxDen}"
                   Grid.RowSpan="2">
                 <ListView.ContextMenu>
@@ -87,7 +69,7 @@
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="Thời Gian Nhận"
-                                    DisplayMemberBinding="{Binding TransmissionEnd}"></GridViewColumn>
+                                    DisplayMemberBinding="{Binding TransmissionEnd,StringFormat='{}{0:HH:mm-dd/MM/yyyy}'}"></GridViewColumn>
                         <GridViewColumn Header="SĐT Gửi"
                                     DisplayMemberBinding="{Binding CallerId}"></GridViewColumn>
 

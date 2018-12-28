@@ -22,6 +22,7 @@ namespace MFAX01V3
     {
         public MainWindow()
         {
+            
             InitializeComponent();
             ButtonCloseMenu.Visibility = Visibility.Collapsed;
         }

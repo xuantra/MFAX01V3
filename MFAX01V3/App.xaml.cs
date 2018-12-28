@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿
+using FAXCOMEXLib;
+using FAXCOMLib;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace MFAX01V3
@@ -15,6 +14,21 @@ namespace MFAX01V3
     /// </summary>
     public partial class App : Application
     {
+        public static FAXCOMEXLib.FaxServer objFaxServer = new FAXCOMEXLib.FaxServer();
+        public static FaxConfiguration objFaxConfig;
+        public  static string folderLuufax;
+        public static FaxAccount objFaxAccount;
+
+        public App()
+        {
+        
+            objFaxServer.Connect("");
+            objFaxConfig = objFaxServer.Configuration;
+            folderLuufax = objFaxConfig.ArchiveLocation;
+            objFaxAccount = objFaxServer.CurrentAccount;
+        }
+      
+
         public bool IsApplicationAlreadyRunning()
         {
             return Process.GetProcesses().Count(p => p.ProcessName.Contains(Assembly.GetExecutingAssembly().FullName.Split(',')[0]) && !p.Modules[0].FileName.Contains("vshost")) > 1;

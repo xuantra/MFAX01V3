@@ -1,0 +1,173 @@
+﻿<UserControl x:Class="MFAX01V3.MultiSelectTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MFAX01V3"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="UserDataTemplate">
+            <StackPanel>
+                <Border 
+                    CornerRadius="2" 
+                    BorderBrush="#FF9DACCC" 
+                    BorderThickness="1" 
+                    VerticalAlignment="Center"
+                    Margin="0,0,4,0"
+                    Background="#FFE2E6F0">
+                    <TextBlock   HorizontalAlignment="Center" 
+                            Text="{Binding Path=DisplayText}" 
+                                 LineHeight="16"
+                            Margin="2" VerticalAlignment="Center">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Remove" Command="local:MultiSelectTextBox.RemoveCommand" CommandParameter="{Binding}" />
+                                <MenuItem Header="Edit" />
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                        <Button Width="12" Height="12" Command="local:MultiSelectTextBox.RemoveCommand" CommandParameter="{Binding}"
+                                VerticalAlignment="Center" HorizontalAlignment="Center" BorderThickness="0"
+                                Margin="2,2,0,0"
+                                >
+                        	<Button.OpacityMask>
+                        		<ImageBrush ImageSource="/MFAX01V3;component/images/delete.gif"/>
+                        	</Button.OpacityMask>
+                            <Button.Background>
+                                <ImageBrush ImageSource="/MFAX01V3;component/images/delete.gif" />
+                            </Button.Background>
+                        </Button>
+                    </TextBlock>
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="FilterDataTemplate">
+            <StackPanel>
+                <local:HighlightedTextBlock Background="White" Highlight="{Binding ElementName=m_searchTextBox, Path=Text}" RawText="{Binding Path=DisplayText}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <CollectionViewSource Source="{Binding RelativeSource={RelativeSource AncestorType=local:MultiSelectTextBox}, Path=SelectedList}" x:Key="items" />
+
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <local:BoolToReverseVisibilityConverter x:Key="BoolToReverseVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid
+        x:Name="root" 
+        VerticalAlignment="Center" >
+
+        <Border BorderBrush="#FF9DACCC" BorderThickness="1" Height="80">
+            <Grid  Validation.Error="validationError">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <ScrollViewer 
+            Grid.Column="0" 
+            VerticalScrollBarVisibility="Auto">
+
+                    <ItemsControl
+                    Focusable="false"
+                    x:Name="UserList"
+                    ItemTemplate="{StaticResource UserDataTemplate}">
+                        <ItemsControl.ItemsSource>
+                            <CompositeCollection>
+                                <CollectionContainer Collection="{Binding Source={StaticResource ResourceKey=items}}"/>
+                                <TextBox
+                                    x:Name="m_searchTextBox"
+                                    KeyDown="m_searchTextBox_KeyDown"
+                                    KeyUp="m_searchTextBox_KeyUp"
+                                    BorderThickness="0"
+                                    VerticalContentAlignment="Center"
+                                    MinWidth="100"
+                                    PreviewKeyDown="m_searchTextBox_PreviewKeyDown"
+                                    MouseWheel="m_searchTextBox_MouseWheel" 
+                                    >
+                                    <TextBox.Text>
+                                        <Binding Path="Email"  NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                                <local:EmailValidationRule></local:EmailValidationRule>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </CompositeCollection>
+                        </ItemsControl.ItemsSource>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                </ScrollViewer>
+
+                <Button
+            Focusable="false"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            Command="local:MultiSelectTextBox.ShowDropDown">^</Button>
+
+
+            </Grid>
+        </Border>
+
+        <Popup 
+            Name="m_popup" 
+            IsOpen="false" 
+            StaysOpen="false"
+            PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+            PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}"
+            Placement="Bottom"
+            MinWidth="{Binding Path=ActualWidth, ElementName=root}">
+            <StackPanel>
+                <ListBox 
+                  MaxHeight="250" 
+                  MinHeight="25"
+                  x:Name="m_searchDataListBox" 
+                  ItemsSource="{Binding Path=AvailableList}" 
+                  ItemTemplate="{StaticResource FilterDataTemplate}" 
+                  MouseDoubleClick="m_searchDataListBox_MouseDoubleClick" 
+                  MouseUp="m_searchDataListBox_MouseUp"
+                  Visibility="{Binding Path=FetchingData, Converter={StaticResource BoolToReverseVisibilityConverter}}">
+
+                    <ListBox.Resources>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="Border" SnapsToDevicePixels="true">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="true">
+                                                <Setter TargetName="Border" Property="Background"
+                                              Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.Resources>
+
+                </ListBox>
+                <Border
+                BorderBrush="Black"
+                BorderThickness="1"
+                Background="white"
+                Visibility="{Binding Path=FetchingData, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock
+                  Margin="5">
+                  Fetching ..
+                    </TextBlock>
+                </Border>
+            </StackPanel>
+        </Popup>
+
+    </Grid>
+</UserControl>

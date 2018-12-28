@@ -4,45 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MFAX01V3.Views"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             xmlns:controls ="clr-namespace:MFAX01V3.Controls"
+             DataContext="{StaticResource SentBoxVM}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Margin="20,0,0,0"
-                       Text="Từ"
-                       VerticalAlignment="Center"></TextBlock>
-            <DatePicker x:Name="dtp_Tu"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0"></DatePicker>
-            <TextBlock Margin="20,0,0,0"
-                       Text="Đến"
-                       VerticalAlignment="Center"></TextBlock>
-            <DatePicker x:Name="dtp_Den"
-                        VerticalAlignment="Center"
-                        Margin="20,0,0,0"></DatePicker>
-            <Button Name="btnFilter"
-                    Margin="20,0,0,0"
-                    Content="Lọc"
-                    Click="btnFilter_Click"></Button>
-            <Button Name="btnReset"
-                    Margin="20,0,0,0"
-                    Content="Bỏ Lọc"
-                    Click="btnReset_Click"></Button>
-        </StackPanel>
+        <Grid >
+            <controls:UcTimKiemThu x:Name="UcTimKiem" BtnReset="UcTimKiem_BtnReset" BtnTimKiem="UcTimKiem_BtnTimKiem"/>
+        </Grid>
 
         <ListView Name="dtg" Grid.Row="1"
-                  PreviewMouseDoubleClick="dtg_PreviewMouseDoubleClick"
+                  ItemsSource="{Binding LstOutFaxs}"
                   Grid.RowSpan="2">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="menuCopy"
                               Header="Sao Chép"
                               Command="{Binding CmCopy}"
-                             
                               >
                     </MenuItem>
                     <MenuItem x:Name="menuXem"
@@ -75,7 +57,7 @@
                     <GridViewColumn Header="Tên Fax"
                                     DisplayMemberBinding="{Binding DocumentName}"></GridViewColumn>
                     <GridViewColumn Header="Thời gian"
-                                    DisplayMemberBinding="{Binding OriginalScheduledTime}"></GridViewColumn>
+                                    DisplayMemberBinding="{Binding OriginalScheduledTime,StringFormat='{}{0:HH:mm-dd/MM/yyyy}'}"></GridViewColumn>
                     <GridViewColumn Header="Tiêu Đề"
                                     DisplayMemberBinding="{Binding Subject}"></GridViewColumn>
                 </GridView>
